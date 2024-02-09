@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "32678112576",
+    "project_id": "emedoc-29408",
+    "storage_bucket": "emedoc-29408.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:32678112576:android:fed2b404d09f73ef1f9ea5",
+        "android_client_info": {
+          "package_name": "com.example.emedoc"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApIvbvTpSeA0twVh6HboRhr_R1SfQMcJU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
