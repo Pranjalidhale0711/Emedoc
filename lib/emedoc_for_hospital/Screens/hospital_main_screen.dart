@@ -1,12 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:emedoc/emedoc_for_hospital/Screens/hospital_info_screen.dart';
 import 'package:emedoc/emedoc_for_hospital/Screens/selected_emergency_screen.dart';
 import 'package:emedoc/emedoc_for_hospital/Widget/get_userdata.dart';
 import 'package:emedoc/emedoc_for_hospital/repositories/auth_repository.dart';
 import 'package:emedoc/models/emergency_model.dart';
-import 'package:emedoc/models/user_model.dart';
 import 'package:emedoc/utils/colors.dart';
-import 'package:emedoc/utils/shortcut.dart';
 import 'package:flutter/material.dart';
 
 class HospitalMainScreen extends StatefulWidget {
@@ -57,7 +54,6 @@ class _HospitalMainScreenState extends State<HospitalMainScreen> {
               // Other widgets (e.g., header, input field) can go here
 
               Container(
-                // Adjust height as needed
                 height: 300, // Example height
                 child: StreamBuilder<List<EmergencyModel>>(
                   stream: getEmergencies(),
@@ -72,31 +68,27 @@ class _HospitalMainScreenState extends State<HospitalMainScreen> {
                       itemCount: snapshot.data!.length,
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
-                        var user = snapshot.data![index];
-                        // Create a widget to display user ID (e.g., ListTile, Card)
-                        // Replace the 'return null;' line with your custom widget
-
+                        var emergency = snapshot.data![index];
+                        
                         return ListTile(
-                          title: Text(user.uid),
+                          title: Text(emergency.name),
                           onTap: () {
                             Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        Selectedemergency(uid: user.uid)));
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    Selectedemergency(emergency: emergency),
+                              ),
+                            );
                           },
-
-                          // Other relevant properties (e.g., onTap, trailing)
                         );
                       },
                     );
                   },
                 ),
               ),
-
-              // Other widgets (e.g., input field, footer) can go here
             ],
           ),
-        ));
+        ),);
   }
 }

@@ -1,4 +1,3 @@
-
 import 'package:emedoc/utils/colors.dart';
 import 'package:flutter/material.dart';
 
@@ -6,11 +5,13 @@ class CustomButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
   final double width;
-  const CustomButton({
+  Color? color;
+  CustomButton({
     super.key,
     required this.text,
     required this.onPressed,
     required this.width,
+    this.color,
   });
 
   @override
@@ -22,7 +23,7 @@ class CustomButton extends StatelessWidget {
       height: 50,
       child: ElevatedButton(
         onPressed: onPressed,
-        style: ElevatedButton.styleFrom(backgroundColor: appBarColor),
+        style: ElevatedButton.styleFrom(backgroundColor: color ?? appBarColor),
         child: Text(
           text,
           style: const TextStyle(

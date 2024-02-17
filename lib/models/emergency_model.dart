@@ -4,6 +4,8 @@ class EmergencyModel {
   String longtitude;
   int ambulanceStatus;
   bool vidCall;
+  String name;
+  String detailsUid;
 
   EmergencyModel({
     required this.uid,
@@ -11,7 +13,8 @@ class EmergencyModel {
     required this.longtitude,
     required this.ambulanceStatus,
     required this.vidCall,
-   
+    required this.name,
+    required this.detailsUid,
   });
 
   Map<String, dynamic> toMap() {
@@ -21,7 +24,8 @@ class EmergencyModel {
       'longtitude': longtitude,
       'ambulanceStatus': ambulanceStatus,
       'vidCall': vidCall,
-     
+      'name': name,
+      'detailsUid': detailsUid,
     };
   }
 
@@ -32,7 +36,8 @@ class EmergencyModel {
       longtitude: map['longtitude'] ?? '',
       ambulanceStatus: map['ambulanceStatus'] ?? 1,
       vidCall: map['vidCall'] ?? false,
-     
+      name: map['name'] ?? '',
+      detailsUid: map['detailsUid'] ?? '',
     );
   }
 }

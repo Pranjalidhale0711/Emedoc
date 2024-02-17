@@ -24,15 +24,10 @@ Stream<List<EmergencyModel>> getEmergencies() async* {
 
   List<EmergencyModel> emergencyCalls = [];
   for (var doc in snapshot.docs) {
-    String uid = doc.id;
+    // String uid = doc.id;
     EmergencyModel? emergency = EmergencyModel.fromMap(doc.data());
-    if (emergency != null) {
-      emergencyCalls.add(emergency);
-    }
+    emergencyCalls.add(emergency);
   }
-
-  print('Emergency calls: $emergencyCalls');
-  print('Current user ID: ${auth.currentUser!.uid}');
 
   yield emergencyCalls;
 }

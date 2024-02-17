@@ -5,12 +5,9 @@ import 'package:emedoc/emedoc_for_users/repositories/auth_repository.dart';
 import 'package:geolocator/geolocator.dart';
 
 Future<void> setEmergency(String hospitalUid, Position currrentLocation) async {
-  print('request e,ergency');
-
   double latitude = currrentLocation.latitude;
   double longitude = currrentLocation.longitude;
 
-  // Check if eme already exists
   DocumentSnapshot emeSnapshot = await FirebaseFirestore.instance
       .collection('emergency')
       .doc(hospitalUid)
@@ -25,6 +22,8 @@ Future<void> setEmergency(String hospitalUid, Position currrentLocation) async {
       longtitude: longitude.toString(),
       ambulanceStatus: 1,
       vidCall: false,
+      name: currentUser!.firstName,
+      detailsUid: 'Not yet provided',
     );
 
     try {
@@ -44,7 +43,6 @@ Future<void> setEmergency(String hospitalUid, Position currrentLocation) async {
 
 Future<void> requestAmbulance(
     String hospitalUid, Position currrentLocation) async {
-  print('request ambulanhuuhuunnujniuj');
   await setEmergency(hospitalUid, currrentLocation);
   try {
     await FirebaseFirestore.instance
@@ -54,11 +52,7 @@ Future<void> requestAmbulance(
         .doc(auth.currentUser!.uid)
         .update({'ambulanceStatus': 1});
 
-    print('emergency');
-    print(hospitalUid);
-    print(auth.currentUser!.uid);
-    print('model');
-     updateAmbulanceStatus(hospitalUid, auth.currentUser!.uid, 2);
+    updateAmbulanceStatus(hospitalUid, auth.currentUser!.uid, 2);
   } catch (e) {
     print('Error requesting ambulance: $e');
   }
@@ -66,7 +60,6 @@ Future<void> requestAmbulance(
 
 Future<void> requestVidCall(
     String hospitalUid, Position currrentLocation) async {
-  print('request ambulanhuuhuunnujniuj');
   await setEmergency(hospitalUid, currrentLocation);
   try {
     await FirebaseFirestore.instance
@@ -75,11 +68,6 @@ Future<void> requestVidCall(
         .collection('users')
         .doc(auth.currentUser!.uid)
         .update({'vidCall': true});
-
-    print('emergency');
-    print(hospitalUid);
-    print(auth.currentUser!.uid);
-    print('model');
   } catch (e) {
     print('Error requesting ambulance: $e');
   }
@@ -93,12 +81,32 @@ Stream<int> checkAmbulanceStatus(String hospitalUid, String userUid) {
       .doc(userUid)
       .snapshots()
       .map((event) {
-        if (event.exists) {
-          return event.data()!['ambulanceStatus'] ?? 1;
-        } else {
-          return 1;
-        }
-      });
+    if (event.exists) {
+      return event.data()!['ambulanceStatus'] ?? 1;
+    } else {
+      return 1;
+    }
+  });
+}
+
+Future<String> checkDetailsUid(String hospitalUid, String userUid) async {
+  try {
+    var snapshot = await FirebaseFirestore.instance
+        .collection('emergency')
+        .doc(hospitalUid)
+        .collection('users')
+        .doc(userUid)
+        .get();
+
+    if (snapshot.exists) {
+      return snapshot.data()?['detailsUid'] ?? 'Not yet provided';
+    } else {
+      return 'Not yet provided';
+    }
+  } catch (e) {
+    print('Error checking detailsUid: $e');
+    rethrow; // Re-throw the error to handle it in the calling code
+  }
 }
 
 void updateAmbulanceStatus(
@@ -110,3 +118,31 @@ void updateAmbulanceStatus(
       .doc(userUid)
       .update({'ambulanceStatus': value});
 }
+
+Future<void> setUserDetails(String hospitalUid, String uid) async {
+  try {
+    await FirebaseFirestore.instance
+        .collection('emergency')
+        .doc(hospitalUid)
+        .collection('users')
+        .doc(auth.currentUser!.uid)
+        .update({'detailsUid': uid});
+  } catch (e) {
+    print('Error requesting ambulance: $e');
+  }
+}
+
+Future<String> getUidwithPhoneNumber(String number) async {
+  QuerySnapshot querySnapshot =
+      await FirebaseFirestore.instance.collection('users').get();
+
+  for (var doc in querySnapshot.docs) {
+    if (doc['phoneNumber'] == number) {
+      return doc.id;
+    }
+  }
+
+  return 'User not found';
+}
+
+

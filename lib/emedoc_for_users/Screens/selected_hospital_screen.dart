@@ -1,10 +1,10 @@
-import 'dart:math';
-
 import 'package:emedoc/emedoc_for_hospital/repositories/auth_repository.dart';
 import 'package:emedoc/utils/custom_button.dart';
 import 'package:emedoc/ambulance/ambulance_repository.dart';
 import 'package:emedoc/models/hospital_model.dart';
+import 'package:emedoc/utils/shortcut.dart';
 import 'package:flutter/material.dart';
+
 import 'package:geolocator/geolocator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -24,6 +24,7 @@ class SelectedHospitalScreen extends StatefulWidget {
 }
 
 class _SelectedHospitalScreenState extends State<SelectedHospitalScreen> {
+  String detailsUid = '';
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -33,12 +34,6 @@ class _SelectedHospitalScreenState extends State<SelectedHospitalScreen> {
       ),
       body: Column(
         children: [
-          Container(
-            decoration: const BoxDecoration(
-              color: Color.fromARGB(255, 197, 137, 157),
-            ),
-            child: Text(widget.hospital.address),
-          ),
           CustomButton(
             text: 'Dial${widget.hospital.phoneNumber}',
             onPressed: () async {
@@ -49,6 +44,7 @@ class _SelectedHospitalScreenState extends State<SelectedHospitalScreen> {
             },
             width: size.width * 0.5,
           ),
+          SizedBox(height: size.height * 0.05),
           CustomButton(
             text: 'Video Conferencing',
             onPressed: () {
@@ -58,49 +54,94 @@ class _SelectedHospitalScreenState extends State<SelectedHospitalScreen> {
             },
             width: size.width * 0.5,
           ),
-          
+          SizedBox(height: size.height * 0.05),
           StreamBuilder(
-            stream: checkAmbulanceStatus(widget.hospitalUid,auth.currentUser!.uid),
+            stream:
+                checkAmbulanceStatus(widget.hospitalUid, auth.currentUser!.uid),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return CircularProgressIndicator();
               }
-              return ElevatedButton(
-                  onPressed: () {
-                    if (snapshot.data == 1) {
-                      requestAmbulance(
-                          widget.hospitalUid, widget.currentPosition);
-                    }
-                  },
-                  child: snapshot.data == 1
-                      ? Text('Request Ambulance')
-                      : snapshot.data == 2
-                          ? Text('Request Sent')
-                          : snapshot.data == 3
-                              ? Text('Request Accepted')
-                              : Text('Request Declined'));
-
-              // Column(
-              //   children: [
-              //     snapshot.data
-              //     Text(
-              //       snapshot.data==1
-              //           ? 'Request Ambulance'
-              //           : 'Request has been sent',
-              //       style: TextStyle(
-              //           color: snapshot.data!
-              //               ? const Color.fromARGB(255, 33, 243, 58)
-              //               : Colors.blue),
-              //     ),
-              //   ],
-              // );
+              return CustomButton(
+                width: size.width * 0.5,
+                onPressed: () {
+                  if (snapshot.data == 1) {
+                    requestAmbulance(
+                        widget.hospitalUid, widget.currentPosition);
+                  }
+                },
+                text: snapshot.data == 1
+                    ? 'Request Ambulance'
+                    : snapshot.data == 2
+                        ? 'Request Sent'
+                        : snapshot.data == 3
+                            ? 'Request Accepted'
+                            : 'Request Declined',
+                color: snapshot.data == 1
+                    ? Colors.blue
+                    : snapshot.data == 2
+                        ? Colors.yellow
+                        : snapshot.data == 3
+                            ? Colors.green
+                            : Colors.red,
+              );
             },
           ),
-          // CustomButton(
-          //   text: 'Share Medical Id',
-          //   onPressed: () {},
-          //   width: size.width * 0.5,
-          // ),
+          SizedBox(height: size.height * 0.05),
+          CustomButton(
+            text: 'Share My Medical details',
+            onPressed: () {
+              setUserDetails(widget.hospitalUid, auth.currentUser!.uid);
+            },
+            width: size.width * 0.5,
+          ),
+          SizedBox(height: size.height * 0.05),
+          CustomButton(
+            text: 'Share Others Medical details',
+            onPressed: () {
+              TextEditingController textcontroller = TextEditingController();
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: Text('Enter Phone Number'),
+                    content: TextField(
+                      controller: textcontroller,
+                      keyboardType: TextInputType.phone,
+                      decoration: InputDecoration(
+                        hintText: 'Enter phone number',
+                      ),
+                    ),
+                    actions: <Widget>[
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Text('Cancel'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () async {
+                          detailsUid =
+                              await getUidwithPhoneNumber(textcontroller.text);
+                          if (detailsUid == 'User not found') {
+                            showSnackBar(
+                                context: context, content: 'User not found');
+                          }
+                          else
+                          {
+                             setUserDetails(widget.hospitalUid, detailsUid);
+                          }
+                        },
+                        child: Text('Submit'),
+                      ),
+                      // if(detailsUid=='User not found')
+                    ],
+                  );
+                },
+              );
+            },
+            width: size.width * 0.5,
+          ),
         ],
       ),
     );

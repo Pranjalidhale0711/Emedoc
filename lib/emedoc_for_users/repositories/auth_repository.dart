@@ -60,7 +60,6 @@ void verifyOTP(String userOTP, BuildContext context) async {
   }
 }
 
-
 Future<Userinfo?> getCurrentUserData() async {
   var userData = await FirebaseFirestore.instance
       .collection('users')
@@ -71,6 +70,7 @@ Future<Userinfo?> getCurrentUserData() async {
   }
   return currentUser;
 }
+
 void finishLogin(BuildContext context) async {
   print('hi');
   var userData = await FirebaseFirestore.instance
