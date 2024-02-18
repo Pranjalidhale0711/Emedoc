@@ -56,7 +56,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text('User Information'),
+        title: const Text('User Information', style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 25),),
         backgroundColor: appBarColor,
       ),
       body: SingleChildScrollView(

@@ -1,15 +1,31 @@
 import 'package:flutter/material.dart';
 
-const backgroundColor = Color.fromRGBO(227, 215, 234, 1);
-const textColor = Color.fromRGBO(0, 0, 0, 1);
-const appBarColor = Color.fromRGBO(159, 134, 192, 1);
-const webAppBarColor = Color.fromRGBO(42, 47, 50, 1);
-const messageColor = Color.fromRGBO(5, 96, 98, 1);
-const senderMessageColor = Color.fromRGBO(37, 45, 49, 1);
-const tabColor = Color.fromRGBO(0, 167, 131, 1);
-const searchBarColor = Color.fromRGBO(50, 55, 57, 1);
-const dividerColor = Color.fromRGBO(37, 45, 50, 1);
-const chatBarMessage = Color.fromRGBO(30, 36, 40, 1);
-const mobileChatBoxColor = Color.fromRGBO(31, 44, 52, 1);
-const greyColor = Colors.grey;
-const blackColor = Colors.black;
+// 1 pink purple blue
+
+// const backgroundColor = Colors.white;
+// const appBarColor = Color.fromRGBO(255, 200, 221, 1);
+// const textColor = Colors.black;
+// const iconColor = Colors.black;
+
+// 2 cream
+
+// const backgroundColor = Colors.white;
+// const appBarColor = Color.fromRGBO(255, 233, 179, 1);
+// const textColor = Colors.black;
+// const iconColor = Colors.black;
+
+
+
+// 3 blue
+
+// const backgroundColor = Colors.white;
+// const appBarColor = Color.fromRGBO(202, 233, 255, 1);
+// const textColor = Colors.black;
+// const iconColor = Colors.black;
+
+// 4 green
+
+const backgroundColor = Colors.white;
+const appBarColor = Color.fromRGBO(204, 227, 222, 1);
+const textColor = Colors.black;
+const iconColor = Colors.black;

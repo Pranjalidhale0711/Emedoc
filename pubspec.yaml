@@ -46,7 +46,9 @@ dependencies:
   location: ^5.0.3
   permission_handler: ^11.2.0
   url_launcher: ^6.2.4
- 
+  flutter_polyline_points: ^2.0.0
+  # zego_uikit_prebuilt_call: ^4.2.2
+
  
 
 dev_dependencies:

@@ -1,11 +1,11 @@
+import 'package:flutter/material.dart';
 import 'package:emedoc/emedoc_for_users/Screens/map_screen.dart';
 import 'package:emedoc/emedoc_for_users/Screens/user_info_screen.dart';
 import 'package:emedoc/utils/colors.dart';
 import 'package:emedoc/emedoc_for_users/repositories/auth_repository.dart';
-import 'package:flutter/material.dart';
 
 class UserMainScreen extends StatefulWidget {
-  const UserMainScreen({super.key});
+  const UserMainScreen({Key? key}) : super(key: key);
 
   @override
   State<UserMainScreen> createState() => _UserMainScreenState();
@@ -19,7 +19,7 @@ class _UserMainScreenState extends State<UserMainScreen> {
         backgroundColor: appBarColor,
         title: Text(
           'Welcome User',
-          style: TextStyle(color: textColor),
+         style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 25),
         ),
         actions: [
           PopupMenuButton(
@@ -29,44 +29,54 @@ class _UserMainScreenState extends State<UserMainScreen> {
             ),
             itemBuilder: (context) => [
               PopupMenuItem(
-                  child: const Text(
-                    'Log out',
-                  ),
-                  onTap: () => signOut(context)),
+                child: const Text('Log out'),
+                onTap: () => signOut(context),
+              ),
               PopupMenuItem(
-                child: const Text(
-                  'Update Information',
+                child: const Text('Update Information'),
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => UserInfoScreen()),
                 ),
-                onTap: () => Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => UserInfoScreen())),
               )
             ],
           ),
         ],
       ),
       body: Center(
-        child: InkWell(
-          onTap: () {
-            Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => MapPage()));
-            print('Emergency button pressed!');
-          },
-          child: Container(
-            width: 300.0,
-            height: 300.0,
-            decoration: BoxDecoration(
-              color: Colors.red, // Change the color as needed
-              shape: BoxShape.circle,
-            ),
-            child: Center(
-              
-              child: InkWell(
-                onTap: (){},
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MapPage()),
+              );
+              print('Emergency button pressed!');
+            },
+            borderRadius: BorderRadius.circular(150.0),
+            child: Container(
+              width: 200.0,
+              height: 200.0,
+              decoration: BoxDecoration(
+                color: Colors.red,
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.3),
+                    blurRadius: 10.0,
+                    spreadRadius: 2.0,
+                    offset: Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Center(
                 child: Text(
                   'Emergency',
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
+                    fontSize: 20.0,
                   ),
                 ),
               ),

@@ -1,5 +1,5 @@
-import 'package:emedoc/emedoc_for_hospital/Screens/login_screen_hospital.dart';
 import 'package:emedoc/emedoc_for_users/Screens/login_screen.dart';
+import 'package:emedoc/utils/colors.dart';
 import 'package:flutter/material.dart';
 
 class LandingScreen extends StatelessWidget {
@@ -7,26 +7,61 @@ class LandingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Who Are You'),
+        title: const Text(
+          'Who Are You',
+          style: TextStyle(color: textColor, fontWeight: FontWeight.w700),
+        ),
+        backgroundColor: appBarColor,
       ),
       body: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          SizedBox(
+            height: size.height * 0.1,
+          ),
           ElevatedButton(
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => LoginScreenUser()));
-              },
-              child: Text('User')),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const LoginScreenUser()),
+              );
+            },
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all<Color>(
+                  appBarColor), // Set the background color here
+              minimumSize: MaterialStateProperty.all(
+                  const Size(150, 50)), // Set the button size here
+            ),
+            child: const Text('User',
+                style: TextStyle(
+                    color: textColor,
+                    fontSize: 18)), // Set the text color and font size here
+          ),
+          SizedBox(
+            width: size.width * 0.1,
+          ),
           ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => LoginScreenHospital()));
-              },
-              child: Text('Hospital')),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const LoginScreenUser()),
+              );
+            },
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all<Color>(
+                  appBarColor), // Set the background color here
+              minimumSize: MaterialStateProperty.all(
+                  const Size(150, 50)), // Set the button size here
+            ),
+            child: const Text('Hospital',
+                style: TextStyle(
+                    color: textColor,
+                    fontSize: 18)), // Set the text color and font size here
+          ),
         ],
       ),
     );

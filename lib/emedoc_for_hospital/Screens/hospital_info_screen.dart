@@ -65,7 +65,7 @@ class _HospitalInfoScreenState extends State<HospitalInfoScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text('Hospita; Information'),
+        title: Text('Hospita; Information', style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 25),),
         backgroundColor: appBarColor,
       ),
       body: SingleChildScrollView(

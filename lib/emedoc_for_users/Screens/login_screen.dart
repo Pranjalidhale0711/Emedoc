@@ -3,7 +3,6 @@ import 'package:emedoc/utils/colors.dart';
 import 'package:emedoc/utils/custom_button.dart';
 import 'package:emedoc/emedoc_for_users/repositories/auth_repository.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class LoginScreenUser extends StatefulWidget {
   const LoginScreenUser({Key? key}) : super(key: key);
@@ -53,7 +52,7 @@ class _LoginScreenUserState extends State<LoginScreenUser> {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
-        title: Text('User Login'),
+        title: const Text('User Login', style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 25),),
         backgroundColor: appBarColor,
       ),
       body: Padding(
@@ -84,7 +83,7 @@ class _LoginScreenUserState extends State<LoginScreenUser> {
                           color: Colors.grey.withOpacity(0.5),
                           spreadRadius: 2,
                           blurRadius: 5,
-                          offset: Offset(0, 2),
+                          offset: const Offset(0, 2),
                         ),
                       ],
                     ),
@@ -93,8 +92,8 @@ class _LoginScreenUserState extends State<LoginScreenUser> {
                       child: TextFormField(
                         validator: _validatePhoneNumber,
                         controller: textcontroller,
-                        style: TextStyle(color: Colors.black),
-                        decoration: InputDecoration(
+                        style: const TextStyle(color: Colors.black),
+                        decoration: const InputDecoration(
                           hintText: 'Enter Phone Number',
                           prefixIcon: Icon(Icons.phone),
                           border: InputBorder.none,
@@ -112,17 +111,17 @@ class _LoginScreenUserState extends State<LoginScreenUser> {
             ElevatedButton(
               onPressed: _send,
               style: ElevatedButton.styleFrom(
-                primary: Colors.blue,
-                onPrimary: Colors.white,
+               
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
+                backgroundColor: appBarColor,
                 elevation: 5,
               ),
-              child: Text(
+              child: const Text(
                 'Next',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: textColor,
                   fontWeight: FontWeight.bold,
                 ),
               ),

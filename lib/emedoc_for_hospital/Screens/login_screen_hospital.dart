@@ -52,7 +52,7 @@ class _LoginScreenHospitalState extends State<LoginScreenHospital> {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
-        title: Text('Hospital login'),
+        title: const Text('Hospital login', style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 25),),
         backgroundColor: appBarColor,
       ),
       body: Padding(
@@ -111,8 +111,7 @@ class _LoginScreenHospitalState extends State<LoginScreenHospital> {
             ElevatedButton(
               onPressed: _send,
               style: ElevatedButton.styleFrom(
-                primary: Colors.blue,
-                onPrimary: Colors.white,
+             
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
@@ -121,7 +120,7 @@ class _LoginScreenHospitalState extends State<LoginScreenHospital> {
               child: Text(
                 'Next',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: textColor,
                   fontWeight: FontWeight.bold,
                 ),
               ),

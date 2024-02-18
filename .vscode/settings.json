@@ -1,3 +1,4 @@
 {
-    "cmake.sourceDirectory": "/Users/pranjalidhale/emedoc/linux"
+    "cmake.sourceDirectory": "/Users/pranjalidhale/emedoc/linux",
+    "java.configuration.updateBuildConfiguration": "interactive"
 }

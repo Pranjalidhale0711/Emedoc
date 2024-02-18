@@ -13,12 +13,8 @@ class OTPScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Enter OTP',
-          style: TextStyle(
-            color:textColor,
-            fontWeight: FontWeight.bold,
-            fontSize: 30,
-          ),
+          'Enter OTP'
+         , style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 25),
         ),
         backgroundColor: appBarColor,
         toolbarHeight: size.height / 12,
