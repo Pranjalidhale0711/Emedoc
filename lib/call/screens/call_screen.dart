@@ -1,0 +1,76 @@
+import 'package:agora_uikit/agora_uikit.dart';
+import 'package:emedoc/agora_config.dart';
+import 'package:emedoc/call/repository/call_repository.dart';
+import 'package:emedoc/models/call_model.dart';
+import 'package:flutter/material.dart';
+
+class CallScreen extends StatefulWidget {
+  final String channelId;
+  final Call call;
+  const CallScreen({
+    super.key,
+    required this.channelId,
+    required this.call,
+  });
+
+  @override
+  State<StatefulWidget> createState() => _CallScreenState();
+}
+
+class _CallScreenState extends State<CallScreen> {
+  AgoraClient? client;
+  String baseUrl = 'base-url';
+
+  @override
+  void initState() {
+    super.initState();
+    client = AgoraClient(
+      agoraConnectionData: AgoraConnectionData(
+        appId: AgoraConfig.appId,
+        channelName: widget.channelId,
+        tokenUrl: baseUrl,
+      ),
+    );
+    initAgora();
+  }
+
+  void initAgora() async {
+    await client!.initialize();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: client == null
+          ? const Scaffold(
+            body: Center(
+              child: Text('Loading...'),
+            )
+          )
+          : SafeArea(
+              child: Stack(
+                children: [
+                  AgoraVideoViewer(client: client!),
+                  AgoraVideoButtons(
+                    client: client!,
+                    disconnectButtonChild: ElevatedButton(
+                      onPressed: () async {
+                        await client!.engine.leaveChannel();
+                        endCall(
+                          context,
+                          widget.call.callerId,
+                          widget.call.receiverId,
+                        );
+                      },
+                      child: const Icon(
+                        Icons.call_end,
+                        color: Colors.red,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+    );
+  }
+}
