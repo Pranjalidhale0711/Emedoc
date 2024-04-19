@@ -1,43 +1,63 @@
 class EmergencyModel {
-  String uid;
+  String patientUid;
+  String patientName;
+  String hospitalUid;
+
+  int ambulanceStatus;
   String latitude;
   String longtitude;
-  int ambulanceStatus;
-  bool vidCall;
-  String name;
-  String detailsUid;
+
+  int vidCallStatus;
+  String callId;
+
+  String medicalDetailsUid;
 
   EmergencyModel({
-    required this.uid,
+    required this.patientUid,
+    required this.patientName,
+    required this.hospitalUid,
+
+    required this.ambulanceStatus,
     required this.latitude,
     required this.longtitude,
-    required this.ambulanceStatus,
-    required this.vidCall,
-    required this.name,
-    required this.detailsUid,
+
+    required this.vidCallStatus,
+    required this.callId,
+
+    required this.medicalDetailsUid,
   });
 
   Map<String, dynamic> toMap() {
     return {
-      'uid': uid,
+      'patientUid': patientUid,
+      'patientName': patientName,
+      'hospitalUid': hospitalUid,
+
+      'ambulanceStatus': ambulanceStatus,
       'latitude': latitude,
       'longtitude': longtitude,
-      'ambulanceStatus': ambulanceStatus,
-      'vidCall': vidCall,
-      'name': name,
-      'detailsUid': detailsUid,
+      
+      'vidCallStatus': vidCallStatus,
+      'callId': callId,
+
+      'medicalDetailsUid': medicalDetailsUid,
     };
   }
 
   factory EmergencyModel.fromMap(Map<String, dynamic> map) {
     return EmergencyModel(
-      uid: map['uid'] ?? '',
+      patientUid: map['patientUid'] ?? '',
+      patientName: map['patientName'] ?? '',
+      hospitalUid: map['hospitalUid'] ?? '',
+
+      ambulanceStatus: map['ambulanceStatus'] ?? 1,
       latitude: map['latitude'] ?? '',
       longtitude: map['longtitude'] ?? '',
-      ambulanceStatus: map['ambulanceStatus'] ?? 1,
-      vidCall: map['vidCall'] ?? false,
-      name: map['name'] ?? '',
-      detailsUid: map['detailsUid'] ?? '',
+
+      vidCallStatus: map['vidCallStatus'] ?? 1,
+      callId: map['callId'] ?? 'NotYetProvided',
+
+      medicalDetailsUid: map['medicalDetailsUid'] ?? 'NotYetProvided',
     );
   }
 }

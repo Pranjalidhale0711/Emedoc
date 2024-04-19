@@ -79,7 +79,7 @@ class _HospitalMainScreenState extends State<HospitalMainScreen> {
                       var emergency = snapshot.data![index];
 
                       return ListTile(
-                        title: Text(emergency.name, style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 17),),
+                        title: Text(emergency.patientName, style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 17),),
                         onTap: () {
                           Navigator.push(
                             context,

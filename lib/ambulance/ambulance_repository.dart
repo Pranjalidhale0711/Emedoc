@@ -17,13 +17,15 @@ Future<void> setEmergency(String hospitalUid, Position currrentLocation) async {
 
   if (!emeSnapshot.exists) {
     EmergencyModel eme = EmergencyModel(
-      uid: auth.currentUser!.uid,
+      patientUid: auth.currentUser!.uid,
+      patientName: currentUser!.firstName,
+      hospitalUid: hospitalUid,
+      ambulanceStatus: 1,
       latitude: latitude.toString(),
       longtitude: longitude.toString(),
-      ambulanceStatus: 1,
-      vidCall: false,
-      name: currentUser!.firstName,
-      detailsUid: 'Not yet provided',
+      vidCallStatus: 1,
+      callId: 'NotYetProvided',
+      medicalDetailsUid: 'NotYetProvided',
     );
 
     try {
@@ -67,9 +69,11 @@ Future<void> requestVidCall(
         .doc(hospitalUid)
         .collection('users')
         .doc(auth.currentUser!.uid)
-        .update({'vidCall': true});
+        .update({'vidCallStatus': 1});
+
+    updateVidCallStatus(hospitalUid, auth.currentUser!.uid, 2);
   } catch (e) {
-    print('Error requesting ambulance: $e');
+    print('Error requesting Video Call: $e');
   }
 }
 
@@ -89,50 +93,56 @@ Stream<int> checkAmbulanceStatus(String hospitalUid, String userUid) {
   });
 }
 
-Future<String> checkDetailsUid(String hospitalUid, String userUid) async {
-  try {
-    var snapshot = await FirebaseFirestore.instance
-        .collection('emergency')
-        .doc(hospitalUid)
-        .collection('users')
-        .doc(userUid)
-        .get();
-
-    if (snapshot.exists) {
-      return snapshot.data()?['detailsUid'] ?? 'Not yet provided';
-    } else {
-      return 'Not yet provided';
-    }
-  } catch (e) {
-    print('Error checking detailsUid: $e');
-    rethrow; // Re-throw the error to handle it in the calling code
-  }
-}
-
-void updateAmbulanceStatus(
-    String hospitalUid, String userUid, int value) async {
-  await FirebaseFirestore.instance
+Stream<int> checkVidCallStatus(String hospitalUid, String userUid) {
+  return firestore
       .collection('emergency')
       .doc(hospitalUid)
       .collection('users')
       .doc(userUid)
+      .snapshots()
+      .map((event) {
+    if (event.exists) {
+      return event.data()!['vidCallStatus'] ?? 1;
+    } else {
+      return 1;
+    }
+  });
+}
+
+void updateAmbulanceStatus(
+    String hospitalUid, String patientUid, int value) async {
+  await FirebaseFirestore.instance
+      .collection('emergency')
+      .doc(hospitalUid)
+      .collection('users')
+      .doc(patientUid)
       .update({'ambulanceStatus': value});
 }
 
-Future<void> setUserDetails(String hospitalUid, String uid) async {
+void updateVidCallStatus(
+    String hospitalUid, String patientUid, int value) async {
+  await FirebaseFirestore.instance
+      .collection('emergency')
+      .doc(hospitalUid)
+      .collection('users')
+      .doc(patientUid)
+      .update({'vidCallStatus': value});
+}
+
+Future<void> setMedicalDetailsUid(String hospitalUid, String uid) async {
   try {
     await FirebaseFirestore.instance
         .collection('emergency')
         .doc(hospitalUid)
         .collection('users')
         .doc(auth.currentUser!.uid)
-        .update({'detailsUid': uid});
+        .update({'medicalDetailsUid': uid});
   } catch (e) {
-    print('Error requesting ambulance: $e');
+    print('Error setting Medical Details Uid: $e');
   }
 }
 
-Future<String> getUidwithPhoneNumber(String number) async {
+Future<String> getMedicalDetailsUidwithPhoneNumber(String number) async {
   QuerySnapshot querySnapshot =
       await FirebaseFirestore.instance.collection('users').get();
 
@@ -141,8 +151,19 @@ Future<String> getUidwithPhoneNumber(String number) async {
       return doc.id;
     }
   }
-
-  return 'User not found';
+  return 'UserNotFound';
 }
 
+Future<String> checkMedicalDetailsUid(String hospitalUid, String userUid) async {
+  var snapshot = await FirebaseFirestore.instance
+      .collection('emergency')
+      .doc(hospitalUid)
+      .collection('users')
+      .doc(userUid)
+      .get();
 
+  if (snapshot.exists) {
+    return snapshot.data()?['medicalDetailsUid'] ?? 'NotYetProvided';
+  }
+  return 'NotYetProvided';
+}

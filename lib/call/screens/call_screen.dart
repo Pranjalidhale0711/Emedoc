@@ -1,16 +1,18 @@
 import 'package:agora_uikit/agora_uikit.dart';
 import 'package:emedoc/agora_config.dart';
 import 'package:emedoc/call/repository/call_repository.dart';
-import 'package:emedoc/models/call_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class CallScreen extends StatefulWidget {
   final String channelId;
-  final Call call;
+  final String hospitalUid;
+  final String patientUid;
   const CallScreen({
     super.key,
     required this.channelId,
-    required this.call,
+    required this.hospitalUid,
+    required this.patientUid,
   });
 
   @override
@@ -18,8 +20,9 @@ class CallScreen extends StatefulWidget {
 }
 
 class _CallScreenState extends State<CallScreen> {
+  FirebaseAuth auth = FirebaseAuth.instance;
   AgoraClient? client;
-  String baseUrl = 'base-url';
+  String baseUrl = 'https://whatsapp-clone-rrr.herokuapp.com';
 
   @override
   void initState() {
@@ -27,8 +30,9 @@ class _CallScreenState extends State<CallScreen> {
     client = AgoraClient(
       agoraConnectionData: AgoraConnectionData(
         appId: AgoraConfig.appId,
-        channelName: widget.channelId,
-        tokenUrl: baseUrl,
+        channelName: 'emedoc',
+        tempToken:
+            '007eJxTYCjOuT5h94tf2VWrza9JJXEqXpF+x1/2L7vMn+EMxwEuzpkKDCnmSWnJFgbmhqlpKSYmJqaJpkkWaUaGZsmJFqnG5sameoWPUxsCGRnixS+zMjJAIIjPxpCam5qSn8zAAAB8sB9/',
       ),
     );
     initAgora();
@@ -40,37 +44,55 @@ class _CallScreenState extends State<CallScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: client == null
-          ? const Scaffold(
-            body: Center(
-              child: Text('Loading...'),
-            )
-          )
-          : SafeArea(
-              child: Stack(
-                children: [
-                  AgoraVideoViewer(client: client!),
-                  AgoraVideoButtons(
-                    client: client!,
-                    disconnectButtonChild: ElevatedButton(
-                      onPressed: () async {
-                        await client!.engine.leaveChannel();
-                        endCall(
-                          context,
-                          widget.call.callerId,
-                          widget.call.receiverId,
-                        );
-                      },
-                      child: const Icon(
-                        Icons.call_end,
-                        color: Colors.red,
-                      ),
-                    ),
-                  ),
-                ],
+    if (client == null) {
+      return const Scaffold(
+        body: Center(
+          child: Text('Loading...'),
+        ),
+      );
+    }
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        body: SafeArea(
+          child: Stack(
+            children: [
+              AgoraVideoViewer(
+                client: client!,
+                showNumberOfUsers: true,
               ),
-            ),
+              AgoraVideoButtons(
+                client: client!,
+                disconnectButtonChild: ElevatedButton(
+                  onPressed: () async {
+                    if (context.mounted) {
+                      endCall(
+                        context: context,
+                        patientUid: widget.patientUid,
+                        hospitalUid: widget.hospitalUid,
+                      );
+                    }
+                    await client!.engine.leaveChannel();
+                    await client!.engine.release();
+                  },
+                  child: const Icon(
+                    Icons.call_end,
+                    color: Colors.red,
+                  ),
+                ),
+              ),
+              // Text(
+              //   widget.channelId,
+              //   style: const TextStyle(
+              //     color: Colors.white,
+              //     fontSize: 20,
+              //     fontWeight: FontWeight.bold,
+              //   ),
+              // ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:emedoc/emedoc_for_hospital/Screens/login_screen_hospital.dart';
 import 'package:emedoc/emedoc_for_users/Screens/login_screen.dart';
 import 'package:emedoc/utils/colors.dart';
 import 'package:flutter/material.dart';
@@ -48,7 +49,7 @@ class LandingScreen extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const LoginScreenUser()),
+                MaterialPageRoute(builder: (context) => const LoginScreenHospital()),
               );
             },
             style: ButtonStyle(

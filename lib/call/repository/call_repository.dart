@@ -1,63 +1,48 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:emedoc/call/screens/call_screen.dart';
-import 'package:emedoc/emedoc_for_users/repositories/auth_repository.dart';
-import 'package:emedoc/models/call_model.dart';
 import 'package:emedoc/utils/shortcut.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 final FirebaseFirestore firestore = FirebaseFirestore.instance;
 final FirebaseAuth auth = FirebaseAuth.instance;
 
-Stream<DocumentSnapshot> get callStream =>
-    firestore.collection('call').doc(auth.currentUser!.uid).snapshots();
+Stream<DocumentSnapshot> callStream(String hospitalUid) {
+  String patientUid = auth.currentUser!.uid;
+  return firestore
+      .collection('emergency')
+      .doc(hospitalUid)
+      .collection('users')
+      .doc(patientUid)
+      .snapshots();
+}
 
-void makeCall(
-  BuildContext context,
-  String receiverName,
-  String receiverUid,
-  String receiverProfilePic,
-) async {
+void makeCall({
+  required BuildContext context,
+  required String patientUid,
+  required String hospitalUid,
+}) async {
   String callId = const Uuid().v1();
-
-  Call senderCallData = Call(
-    callerId: auth.currentUser!.uid,
-    callerName: currentUser!.name,
-    callerPic: currentUser!.profilePic,
-    receiverId: receiverUid,
-    receiverName: receiverName,
-    receiverPic: receiverProfilePic,
-    callId: callId,
-    hasDialled: true,
-  );
-
-  Call receiverCallData = Call(
-    callerId: auth.currentUser!.uid,
-    callerName: currentUser!.name,
-    callerPic: currentUser!.profilePic,
-    receiverId: receiverUid,
-    receiverName: receiverName,
-    receiverPic: receiverProfilePic,
-    callId: callId,
-    hasDialled: false,
-  );
-
   try {
     await firestore
-        .collection('call')
-        .doc(auth.currentUser!.uid)
-        .set(senderCallData.toMap());
-    await firestore
-        .collection('call')
-        .doc(receiverUid)
-        .set(receiverCallData.toMap());
+        .collection('emergency')
+        .doc(hospitalUid)
+        .collection('users')
+        .doc(patientUid)
+        .update({'callId': callId});
 
-    push(
-      context: context,
-      screen: () => CallScreen(
-        channelId: senderCallData.callId,
-        call: senderCallData,
+    if (!context.mounted) return;
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CallScreen(
+          channelId: callId,
+          hospitalUid: hospitalUid,
+          patientUid: patientUid,
+        ),
       ),
     );
   } catch (e) {
@@ -65,14 +50,20 @@ void makeCall(
   }
 }
 
-void endCall(
-  BuildContext context,
-  String callerUid,
-  String receiverUid,
-) async {
+void endCall({
+  required BuildContext context,
+  required String patientUid,
+  required String hospitalUid,
+}) async {
   try {
-    await firestore.collection('call').doc(callerUid).delete();
-    await firestore.collection('call').doc(receiverUid).delete();
+    await firestore
+        .collection('emergency')
+        .doc(hospitalUid)
+        .collection('users')
+        .doc(patientUid)
+        .update({'callId': 'NotYetProvided'});
+
+    if (!context.mounted) return;
 
     Navigator.of(context).pop();
   } catch (e) {
